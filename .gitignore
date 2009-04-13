@@ -1,0 +1,7 @@
+build/
+dist/
+TracCucumber.egg-info/PKG-INFO
+TracCucumber.egg-info/SOURCES.txt
+TracCucumber.egg-info/dependency_links.txt
+TracCucumber.egg-info/entry_points.txt
+TracCucumber.egg-info/top_level.txt
