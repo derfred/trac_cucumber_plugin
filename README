@@ -3,34 +3,28 @@ Introduction
 
 This plugin allows you to integrate cucumber with Trac. It will allow you to enter User Stories in a wiki page and execute them as part of a continuous integration build. The results of the story execution will then be displayed in the wiki page.
 
-This plugin provides two macros:
-CucumberSummary - this is a summary widget which allows you to view multiple stories at once
-CucumberStory - this macro wraps around a cucumber story and will display the story output
 
-
-Examples
-========
-
-[[CucumberSummary]]  - Display a summary widget with all stories in the database
-[[CucumberSummary(wiki,login)]] - Display a summary widget with all stories having the tags wiki and login
-
+Example
+=======
 
 The following example will create a story named user_login with the tags wiki and login:
 {{{
-#cucumber user_login | wiki,login
+  #!CucumberStory
+  #name: manage_login
 
-Feature: User login
-  In order to use the site
-  as an unauthenticated visitors
-  i want to be able to login
-
-  Scenario: Logging in
-    Given I am on the homepage
-    When I enter my login details
-    And press "Login"
-    Then I should see my name
-
+  Feature: User login
+    In order to use the site
+    as an unauthenticated visitors
+    i want to be able to login
+  
+    Scenario: Logging in
+      Given I am on the homepage
+      When I enter my login details
+      And press "Login"
+      Then I should see my name
 }}}
+
+If, when opening the page, the story has already been run and its output is present in the database
 
 
 Use Cases
@@ -79,27 +73,6 @@ Existing Feature is edited
  * callback to observers is made
 
 
-Existing Feature is deleted
----------------------------
-
- * User edits page
- * User removes an existing story
- * The corresponding .feature file is deleted
- * callback to observers is made
-
-
-Existing Feature is renamed
----------------------------
-
- This is equivalent to deleting and adding a new Feature
-
-
-Summary widget is displayed
---------------------------
-
- * User visits a page with an embedded summary widget
- * all stories (matching parameters) are queried from the story database
- * these stories are displayed in the widget
 
 Trac-Macros
 ===========
@@ -108,9 +81,6 @@ Trac-Macros
    * Arguments:
      - name: name of the story, this must be unique
      - tags (optional): a number of tags to be associated with this story
- * CucumberSummary - displays the summary widget
-   * Arguments:
-     - tags (optional): only stories matching these tags are displayed in the summary widget
 
 Components
 ==========
@@ -120,7 +90,7 @@ CucumberPlugin
 represents the plugin
 
 Extension points:
- - observers: these receive callbacks on add, edit and remove of stories
+ - observer: receives callbacks on add and edit of stories
  - database: interfaces with the story database
  - story_renderer: renders a story
 
@@ -147,10 +117,6 @@ CucumberStoryMacro
 macro for rendering a single story
 
 
-CucumberSummaryMacro
---------------------
-macro for rendering summary widget
-
 
 Interfaces
 ==========
@@ -162,16 +128,6 @@ class ICucumberDatabase:
   def get_story(name):
     """retrieve the output for given story, None if story has not yet executed"""
 
-  def get_stories(tags=None):
-    """retrieve the output for all stories, if tags is present then only those matching all tags"""
-
-
-  def add_story_name_to_page(page_name, story_name):
-    """adds a story name to the given page"""
-
-  def get_story_names_for_page(page_name):
-    """return all story names for a given page name"""
-
 
 class ICucumberStoryRenderer:
   def render_story_output(story):
@@ -179,12 +135,8 @@ class ICucumberStoryRenderer:
 
 
 class ICucumberObserver:
-  def story_added(story_name, story, page_name, tags):
+  def story_added(story_name, story, tags):
     """called when a new story is added"""
 
-  def story_edited(story_name, story, page_name, tags)
+  def story_edited(story_name, story, tags):
     """called when an existing story is edited"""
-
-  def story_removed(story_name, page_name):
-    """called when an exiting story is removed"""
-

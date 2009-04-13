@@ -1,0 +1,30 @@
+.cucumber_story {
+  margin: 10px;
+  padding: 10px;
+  border: 2px solid #eee;
+}
+
+.cucumber_story h2 {
+  margin-top: 0px;
+  margin-left: 0px;
+}
+
+.cucumber_story h3 {
+  margin-top: 20px;
+  margin-left: 0px;
+  margin-bottom: 2px;
+}
+
+.cucumber_story .story {
+  padding-top: 0px;
+  margin-top: 0px;
+}
+
+.cucumber_story.new h3, .cucumber_story.changed h3, .cucumber_story.missing h3 {
+  color: #333;
+}
+
+.cucumber_story.new .story, .cucumber_story.changed .story, .cucumber_story.missing .story {
+  white-space: pre;
+  color: #333;
+}
