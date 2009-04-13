@@ -1,0 +1,190 @@
+Introduction
+============
+
+This plugin allows you to integrate cucumber with Trac. It will allow you to enter User Stories in a wiki page and execute them as part of a continuous integration build. The results of the story execution will then be displayed in the wiki page.
+
+This plugin provides two macros:
+CucumberSummary - this is a summary widget which allows you to view multiple stories at once
+CucumberStory - this macro wraps around a cucumber story and will display the story output
+
+
+Examples
+========
+
+[[CucumberSummary]]  - Display a summary widget with all stories in the database
+[[CucumberSummary(wiki,login)]] - Display a summary widget with all stories having the tags wiki and login
+
+
+The following example will create a story named user_login with the tags wiki and login:
+{{{
+#cucumber user_login | wiki,login
+
+Feature: User login
+  In order to use the site
+  as an unauthenticated visitors
+  i want to be able to login
+
+  Scenario: Logging in
+    Given I am on the homepage
+    When I enter my login details
+    And press "Login"
+    Then I should see my name
+
+}}}
+
+
+Use Cases
+=========
+
+The following is a list of possible interactions of the user with the plugin
+
+New Feature is entered
+----------------------
+
+ * User edits page
+ * User adds new story
+ * new story is extracted and saved in a .feature file
+   * the name for the file is taken from the macro parameters
+ * callback to observers is made
+
+
+Existing Feature (which has been run before) is displayed
+---------------------------------------------------------
+
+ * User visits a page with an embedded story
+ * The story database is queried for the story
+   * the key is taken from the macro parameters
+ * result of story execution is displayed
+   * scenarios are collapsed and coloured according to their status
+   * error messages for failed steps are shown in a popup
+
+
+New Feature (which has not been run before) is displayed
+---------------------------------------------------------
+
+ * User visits a page with an embedded story
+ * The story database is queried for the story
+   * the key is taken from the macro parameters
+ * the database returns a record_not_found
+ * a pending execution message is displayed
+
+
+Existing Feature is edited
+--------------------------
+
+ * User edits page
+ * User changes an existing story
+ * new story is extracted and saved in a .feature file, overwriting the existing
+   * the name for the file is taken from the macro parameters
+ * callback to observers is made
+
+
+Existing Feature is deleted
+---------------------------
+
+ * User edits page
+ * User removes an existing story
+ * The corresponding .feature file is deleted
+ * callback to observers is made
+
+
+Existing Feature is renamed
+---------------------------
+
+ This is equivalent to deleting and adding a new Feature
+
+
+Summary widget is displayed
+--------------------------
+
+ * User visits a page with an embedded summary widget
+ * all stories (matching parameters) are queried from the story database
+ * these stories are displayed in the widget
+
+Trac-Macros
+===========
+
+ * CucumberStory - wraps a story
+   * Arguments:
+     - name: name of the story, this must be unique
+     - tags (optional): a number of tags to be associated with this story
+ * CucumberSummary - displays the summary widget
+   * Arguments:
+     - tags (optional): only stories matching these tags are displayed in the summary widget
+
+Components
+==========
+
+CucumberPlugin
+--------------
+represents the plugin
+
+Extension points:
+ - observers: these receive callbacks on add, edit and remove of stories
+ - database: interfaces with the story database
+ - story_renderer: renders a story
+
+
+CucumberDatabase
+----------------
+interface to the story database
+ - saves and updates stories extracted from the wiki
+ - returns the output for stories
+ - maintains the mapping of story names to page names
+   (this is required to be able to remove stories)
+
+Configuration:
+ - location: location of the story database
+
+
+CucumberStoryRenderer
+---------------------
+renders story output to HTML
+
+
+CucumberStoryMacro
+------------------
+macro for rendering a single story
+
+
+CucumberSummaryMacro
+--------------------
+macro for rendering summary widget
+
+
+Interfaces
+==========
+
+class ICucumberDatabase:
+  def save_story(name, story, tags):
+    """Save the given story under the given name with the given tags"""
+
+  def get_story(name):
+    """retrieve the output for given story, None if story has not yet executed"""
+
+  def get_stories(tags=None):
+    """retrieve the output for all stories, if tags is present then only those matching all tags"""
+
+
+  def add_story_name_to_page(page_name, story_name):
+    """adds a story name to the given page"""
+
+  def get_story_names_for_page(page_name):
+    """return all story names for a given page name"""
+
+
+class ICucumberStoryRenderer:
+  def render_story_output(story):
+    """turn the output of the given story into HTML"""
+
+
+class ICucumberObserver:
+  def story_added(story_name, story, page_name, tags):
+    """called when a new story is added"""
+
+  def story_edited(story_name, story, page_name, tags)
+    """called when an existing story is edited"""
+
+  def story_removed(story_name, page_name):
+    """called when an exiting story is removed"""
+
