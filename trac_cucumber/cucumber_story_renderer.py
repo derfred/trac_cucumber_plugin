@@ -1,6 +1,6 @@
 from trac.util.html import Markup
 from trac.wiki import Formatter
-from trac.web.chrome import Chrome, ITemplateProvider, add_stylesheet
+from trac.web.chrome import Chrome, ITemplateProvider, add_stylesheet, add_script
 from interfaces import *
 
 from pkg_resources import resource_filename
@@ -29,6 +29,7 @@ class CucumberStoryRenderer(Component):
         add_stylesheet(formatter.req, 'trac_cucumber/trac_cucumber.css')
         return Chrome(self.env).render_template(formatter.req, 'missing_output.html', {'story_name': story_name, 'story': story})
 
-    def render_story_output(self, formatter, story_name, output):
+    def render_story_output(self, formatter, story_name, feature):
         add_stylesheet(formatter.req, 'trac_cucumber/trac_cucumber.css')
-        return Chrome(self.env).render_template(formatter.req, 'story_output.html', {'story_name': story_name, 'output': output})
+        add_script(formatter.req, 'trac_cucumber/trac_cucumber.js')
+        return Chrome(self.env).render_template(formatter.req, 'story_output.html', {'story_name': story_name, 'feature': feature})

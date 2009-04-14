@@ -4,10 +4,48 @@
   border: 2px solid #eee;
 }
 
+.cucumber_story.output.passed {
+  border: 2px solid green;
+}
+
+.cucumber_story.output.failed {
+  border: 2px solid red;
+}
+
 .cucumber_story h2 {
   margin-top: 0px;
   margin-left: 0px;
 }
+
+.cucumber_story.output h2 {
+  padding: 10px;
+  margin: -10px;
+}
+
+.cucumber_story.output.passed h2 {
+  background: #79ff67;
+}
+
+.cucumber_story.output.selected.passed h2 {
+  border-bottom: 2px solid green;
+}
+
+.cucumber_story.output.failed h2 {
+  background: #F44B4B;
+}
+
+.cucumber_story.output.selected.failed h2 {
+  border-bottom: 2px solid red;
+}
+
+.cucumber_story.output.pending h2, .cucumber_story.output.skipped h2 {
+  background: #ddd;
+}
+
+.cucumber_story.output.selected.pending h2, .cucumber_story.output.selected.skipped h2 {
+  border-bottom: 2px solid #eee;
+}
+
 
 .cucumber_story h3 {
   margin-top: 20px;
@@ -24,7 +62,28 @@
   color: #333;
 }
 
+.cucumber_story.output div {
+  display: none;
+}
+
+.cucumber_story.output.selected div {
+  display: block;
+}
+
 .cucumber_story.new .story, .cucumber_story.changed .story, .cucumber_story.missing .story {
   white-space: pre;
   color: #333;
+}
+
+.cucumber_story li.passed {
+  color: #070;
+}
+
+.cucumber_story li.failed {
+  color: red;
+  font-weight: bold;
+}
+
+.cucumber_story li.pending, .cucumber_story li.skipped {
+  color: #555;
 }

@@ -8,5 +8,6 @@ setup(name=PACKAGE,
       packages=['trac_cucumber'],
       entry_points={'trac.plugins': '%s = trac_cucumber' % PACKAGE},
       package_data={'trac_cucumber': ['templates/*.html',
-                                      'htdocs/*.css']}
+                                      'htdocs/*.css',
+                                      'htdocs/*.js']}
 )

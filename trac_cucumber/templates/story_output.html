@@ -1,0 +1,19 @@
+<div xmlns:py="http://genshi.edgewall.org/"
+     class="cucumber_story output ${feature.result()}">
+  <h2>${feature.description} - ${feature.name}</h2>
+
+  <div py:if="feature.background" class="background ${feature.background.result()}">
+    <h3>${_("Background")}: ${feature.background.description}</h3>
+    <ul>
+      <li py:for="step in feature.background.steps" class="${step.result()}">${step.keyword} ${step.description}</li>
+    </ul>
+  </div>
+
+  <div py:for="scenario in feature.scenarios" class="scenario ${scenario.result()}">
+    <h3>${_("Scenario")}: ${scenario.description}</h3>
+    <ul>
+      <li py:for="step in feature.background.steps" class="${step.result()}">${step.keyword} ${step.description}</li>
+    </ul>
+  </div>
+
+</div>
