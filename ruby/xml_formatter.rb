@@ -27,7 +27,7 @@ class XMLFormatter < Cucumber::Ast::Visitor
   end
 
   def visit_feature_name(name)
-    @builder.feature_name name
+    @builder.description name
   end
 
   def visit_background(background)
@@ -37,7 +37,7 @@ class XMLFormatter < Cucumber::Ast::Visitor
   end
 
   def visit_background_name(keyword, name, file_colon_line, source_indent)
-    @builder.background_name name
+    @builder.description name
   end
 
   def visit_feature_element(feature_element)
@@ -47,7 +47,7 @@ class XMLFormatter < Cucumber::Ast::Visitor
   end
   
   def visit_scenario_name(keyword, name, file_colon_line, source_indent)
-    @builder.scenario_name name
+    @builder.description name
   end
 
   def visit_steps(steps)
@@ -64,7 +64,7 @@ class XMLFormatter < Cucumber::Ast::Visitor
 
   def visit_step_name(keyword, step_match, status, source_indent, background)
     @builder.keyword keyword
-    @builder.name step_match.format_args(lambda{|a| a})
+    @builder.description step_match.format_args(lambda{|a| a})
     @builder.status status.to_s
   end
 
